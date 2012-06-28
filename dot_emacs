@@ -1,0 +1,60 @@
+;; フォント
+(if (eq window-system 'mac) (require 'carbon-font))
+(fixed-width-set-fontset "hirakaku_w3" 14)
+;; cocoa emacs
+;;   (let* ((size 14)			;
+;;          (asciifont "Menlo")
+;;          (jpfont "Hiragino Maru Gothic ProN")
+;;          (h (* size 10))
+;;          (fontspec)
+;;          (jp-fontspec))
+;;     (set-face-attribute 'default nil :family asciifont :height h)
+;;     (setq fontspec (font-spec :family asciifont))
+;;     (setq jp-fontspec (font-spec :family jpfont))
+;;     (set-fontset-font nil 'japanese-jisx0208 jp-fontspec)
+;;     (set-fontset-font nil 'japanese-jisx0212 jp-fontspec)
+;;     (set-fontset-font nil 'japanese-jisx0213-1 jp-fontspec)
+;;     (set-fontset-font nil 'japanese-jisx0213-2 jp-fontspec)
+;;     (set-fontset-font nil '(#x0080 . #x024F) fontspec)
+;;     (set-fontset-font nil '(#x0370 . #x03FF) fontspec))
+
+;; 使えるフォントをリストアップしてくれる魔法のコマンド
+;; (insert (prin1-to-string (x-list-fonts "*")))
+
+;; パスの設定
+;; より下に記述した物が PATH の先頭に追加されます
+(dolist (dir (list
+              "/sbin"
+              "/usr/sbin"
+              "/bin"
+              "/usr/bin"
+              "/usr/texbin"
+              "/opt/local/bin"
+              "/sw/bin"
+              "/usr/local/bin"
+              (expand-file-name "~/bin")
+              (expand-file-name "~/.emacs.d/bin")
+              ))
+ ;; PATH と exec-path に同じ物を追加します
+ (when (and (file-exists-p dir) (not (member dir exec-path)))
+   (setenv "PATH" (concat dir ":" (getenv "PATH")))
+   (setq exec-path (append (list dir) exec-path))))
+
+
+;; メタとスーパー
+(setq ns-command-modifier (quote meta))
+(setq ns-alternate-modifier (quote super))
+;; C-h
+(global-set-key "\C-h" 'backward-delete-char)
+
+
+;; ロードパス
+(setq my-default-directory "~/.emacs.d")
+(setq load-path (cons (expand-file-name (concat my-default-directory "/lisp-install")) load-path))
+(setq load-path (cons (expand-file-name (concat my-default-directory "/lisp-install/apel")) load-path))
+(setq load-path (cons (expand-file-name (concat my-default-directory "/lisp-install/yatex1.74")) load-path))
+
+;; ファイル読み込み
+(load "~/.emacs.d/.emacs")
+(find-file "~/Dropbox/Documents/memos/TODO.txt")
+
